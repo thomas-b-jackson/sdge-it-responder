@@ -1,12 +1,17 @@
 directive @auth(requires: [Role!]!) on FIELD_DEFINITION
 
 type Query {
-	sections: [Section!]! @auth(requires: [RESPONDER_USER])
+	users: [User!]! @auth(requires: [PositionLead])
+	sections: [Section!]! @auth(requires: [Responder])
 }
 
 type Mutation {
-	registerUser(newUser: NewUser!): UserRegistrationResponse
-		@auth(requires: [RESPONDER_USER])
+	register(user: NewUser!): UserRegistrationResponse
+		@auth(requires: [Responder])
+	approve(approval: RegistrationApproval!): UserRegistrationResponse
+		@auth(requires: [PositionLead])
+	reject(rejection: RegistrationRejection!): UserRegistrationResponse
+		@auth(requires: [PositionLead])
 }
 
 # recommended mutation response type, per:
@@ -38,8 +43,9 @@ type User {
 	name: String!
 	email: String!
 	role: Role!
-	status: UserStatus!
+	status: RegistrationStatus
 	position: Position
+	registrations: [RegistrationOutcome]
 }
 
 input NewUser {
@@ -48,15 +54,36 @@ input NewUser {
 	position: Position!
 }
 
-enum UserStatus {
-	UNKNOWN
-	APPROVED
-	APPROVAL_PENDING
-	APPROVAL_REJECTED
+type RegistrationOutcome {
+	position: Position!
+	approver: String!
+	date: String!
+	status: RegistrationStatus!
+	rejectionReason: String
+}
+
+input RegistrationApproval {
+	approver: String!
+	userName: String!
+	position: Position!
+}
+
+input RegistrationRejection {
+	approver: String!
+	userName: String!
+	position: Position!
+	reason: String
+}
+
+enum RegistrationStatus {
+	Unknown
+	Approved
+	ApprovalPending
+	ApprovalRejected
 }
 
 enum Role {
-	SHAPE_SHIFTER
-	SYS_ADMIN
-	RESPONDER_USER
+	PositionLead
+	Coordinator
+	Responder
 }

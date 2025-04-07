@@ -4,21 +4,32 @@ title: Responder User Registration
 ---
 erDiagram
   Section  ||--|| Postition : includes
+  User  ||--|| Postition : includes
+  User  ||--|| RegistrationOutcome : includes
 
   Section {
-    String name           "dynamo"
-    Postion[] positions   "dynamo"
+    name String "dynamo"
+    positions Postion[] "dynamo"
   }
 
   Postition {
-    String name  "dynamo"
+    name String "dynamo"
   }
 
   User {
-    String name  "dynamo"
-    String email "dynamo"
-    UserRole role  "dynamo"
-    Position position  "dynamo"
+    name String   "dynamo"
+    email String "dynamo"
+    role UserRole "dynamo"
+    position Position "dynamo"
+    status RegistrationStatus "dynamo"
+    registrations RegistrationOutcome[] "dynamo"
+  }
+
+  RegistrationOutcome {
+    approver String  "dynamo"
+    position Position "dynamo"
+    date UTCString "dynamo"
+    status RegistrationStatus  "dynamo"
   }
 
 ```
