@@ -1,20 +1,20 @@
 directive @auth(requires: [Role!]!) on FIELD_DEFINITION
 
 type Query {
-	users: [User!]! @auth(requires: [PositionLead])
-	sections: [Section!]! @auth(requires: [Responder])
+	users: [User!]! @auth(requires: [PositionLead, Coordinator])
+	sections: [Section!]! @auth(requires: [Responder, PositionLead, Coordinator])
 }
 
 type Mutation {
-	register(user: NewUser!): UserRegistrationResponse
+	register(user: UserRegistration!): UserRegistrationResponse
 		@auth(requires: [Responder])
 	approve(approval: RegistrationApproval!): UserRegistrationResponse
-		@auth(requires: [PositionLead])
+		@auth(requires: [Coordinator])
 	reject(rejection: RegistrationRejection!): UserRegistrationResponse
-		@auth(requires: [PositionLead])
+		@auth(requires: [Coordinator])
 }
 
-# recommended mutation response type, per:
+# recommended mutation response base type, per:
 #  https://www.apollographql.com/docs/apollo-server/schema/schema#structuring-mutation-responses
 interface Response {
 	code: String!
@@ -48,7 +48,7 @@ type User {
 	registrations: [RegistrationOutcome]
 }
 
-input NewUser {
+input UserRegistration {
 	name: String!
 	email: String!
 	position: Position!
