@@ -1,0 +1,62 @@
+directive @auth(requires: [Role!]!) on FIELD_DEFINITION
+
+type Query {
+	sections: [Section!]! @auth(requires: [RESPONDER_USER])
+}
+
+type Mutation {
+	registerUser(newUser: NewUser!): UserRegistrationResponse
+		@auth(requires: [RESPONDER_USER])
+}
+
+# recommended mutation response type, per:
+#  https://www.apollographql.com/docs/apollo-server/schema/schema#structuring-mutation-responses
+interface Response {
+	code: String!
+	success: Boolean!
+	message: String!
+}
+
+type UserRegistrationResponse implements Response {
+	code: String!
+	success: Boolean!
+	message: String!
+	user: User
+}
+
+type Section {
+	name: SectionName!
+	positions: [Position!]!
+}
+
+type Position {
+	name: PositionName!
+	section: Section!
+}
+
+type User {
+	name: String!
+	email: String!
+	role: Role!
+	status: UserStatus!
+	position: Position
+}
+
+input NewUser {
+	name: String!
+	email: String!
+	position: Position!
+}
+
+enum UserStatus {
+	UNKNOWN
+	APPROVED
+	APPROVAL_PENDING
+	APPROVAL_REJECTED
+}
+
+enum Role {
+	SHAPE_SHIFTER
+	SYS_ADMIN
+	RESPONDER_USER
+}
