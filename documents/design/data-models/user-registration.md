@@ -3,21 +3,21 @@
 title: Responder User Registration
 ---
 erDiagram
-  SECTION    ||--|| POSITION : includes
+  Section  ||--|| Postition : includes
 
-  SECTION {
+  Section {
     String name           "dynamo"
-    postion[] positions   "dynamo"
+    Postion[] positions   "dynamo"
   }
 
-  POSITION {
+  Postition {
     String name  "dynamo"
   }
 
-  USER {
+  User {
     String name  "dynamo"
     String email "dynamo"
-    String role  "dynamo"
+    UserRole role  "dynamo"
     Position position  "dynamo"
   }
 
