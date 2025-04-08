@@ -16,7 +16,7 @@ Access to each web and api resources is controlled via user role.
 
 Supported roles are per the `Role` enum in [api/schemas/user-registration.graphql](../../api/schemas/user-registration.graphql).
 
-Users are provisioned either manaully, or via the registration process, and are assigned to after provisioning.
+Users are provisioned either manaully, or via the registration process.
 
 # API Authorization Controls
 
@@ -24,6 +24,6 @@ Every api query and mutation defined in the api schema includes an `@auth` direc
 
 # Web Authorization Controls
 
-The first level of web-based authorization controls are defined against each page or resource. These controls are implemented in the `NAVIGATIONCONSTANTS.APPLIST` array in `web/src/constants/navigation.ts`.
+The first level of web-based authorization controls are defined against each page or resource.
 
-A user's role must be included in the roles in the directive array in order the `role` attribute in the array to access the associated application, page, or resource..
+> Note: The details are TBD for now.

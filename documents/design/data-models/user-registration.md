@@ -1,3 +1,13 @@
+# Overview
+
+Objects used in responder user registration processes.
+
+# ERD
+
+![alt text](./user-registration.png)
+
+# Appendix: Mermaid Sources
+
 ```mermaid
 ---
 title: Responder User Registration
@@ -8,28 +18,28 @@ erDiagram
   User  ||--|| RegistrationOutcome : includes
 
   Section {
-    name String "dynamo"
-    positions Postion[] "dynamo"
+    name String
+    positions Postion[]
   }
 
   Postition {
-    name String "dynamo"
+    name String
+    section Section
   }
 
   User {
-    name String   "dynamo"
-    email String "dynamo"
-    role UserRole "dynamo"
-    position Position "dynamo"
-    status RegistrationStatus "dynamo"
-    registrations RegistrationOutcome[] "dynamo"
+    name String
+    email String
+    role UserRole
+    position Position
+    status RegistrationStatus
+    registrations RegistrationOutcome[]
   }
 
   RegistrationOutcome {
-    approver String  "dynamo"
-    position Position "dynamo"
-    date UTCString "dynamo"
-    status RegistrationStatus  "dynamo"
+    approver String
+    position Position
+    date UTCString
+    status RegistrationStatus
   }
-
 ```
