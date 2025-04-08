@@ -1,4 +1,4 @@
-Note:
+Notes:
 
 1. credentials need to be audited separately from trainings
 1. evaluations apply to command and general staff only
@@ -7,7 +7,7 @@ Note:
 
 ```mermaid
 ---
-title: Responder
+title: Responder MVP
 ---
 erDiagram
   INCIDENT ||--|| ROSTER : staffing-response-to

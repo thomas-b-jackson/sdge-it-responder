@@ -1,23 +1,30 @@
 directive @auth(requires: [Role!]!) on FIELD_DEFINITION
 
 type Query {
-	sections: [Section!]! @auth(requires: [RESPONDER_USER])
+	users: [User!]! @auth(requires: [PositionLead, Coordinator])
+	sections: [Section!]! @auth(requires: [Responder, PositionLead, Coordinator])
 }
 
 type Mutation {
-	registerUser(newUser: NewUser!): UserRegistrationResponse
-		@auth(requires: [RESPONDER_USER])
+	apply(application: ApplicationInput!): ResponderApplicationResponse
+		@auth(requires: [AuthenticatedUser])
+	approveApplication(
+		approval: ApplicationApproval!
+	): ResponderApplicationResponse @auth(requires: [Coordinator])
+	rejectApplication(
+		rejection: ApplicationRejection!
+	): ResponderApplicationResponse @auth(requires: [Coordinator])
+	resetApplication(name: String!): ResponderApplicationResponse
+		@auth(requires: [Coordinator])
 }
 
-# recommended mutation response type, per:
-#  https://www.apollographql.com/docs/apollo-server/schema/schema#structuring-mutation-responses
 interface Response {
 	code: String!
 	success: Boolean!
 	message: String!
 }
 
-type UserRegistrationResponse implements Response {
+type ResponderApplicationResponse implements Response {
 	code: String!
 	success: Boolean!
 	message: String!
@@ -38,25 +45,43 @@ type User {
 	name: String!
 	email: String!
 	role: Role!
-	status: UserStatus!
 	position: Position
+	application: Application
 }
 
-input NewUser {
+input ApplicationInput {
 	name: String!
 	email: String!
 	position: Position!
 }
 
-enum UserStatus {
-	UNKNOWN
-	APPROVED
-	APPROVAL_PENDING
-	APPROVAL_REJECTED
+type Application {
+	position: Position!
+	status: ApplicationStatus!
+	rejectionReason: String
+}
+
+input ApplicationApproval {
+	userName: String!
+	position: Position!
+}
+
+input ApplicationRejection {
+	userName: String!
+	position: Position!
+	reason: String
+}
+
+enum ApplicationStatus {
+	Unknown
+	Approved
+	Pending
+	Rejected
 }
 
 enum Role {
-	SHAPE_SHIFTER
-	SYS_ADMIN
-	RESPONDER_USER
+	AuthenticatedUser
+	PositionLead
+	Coordinator
+	Responder
 }
