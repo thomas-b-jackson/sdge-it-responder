@@ -1,6 +1,6 @@
 # Overview
 
-Objects used in responder user registration processes.
+An entity-relationship-diagram (ERD) representing the business objects used in responder user registration processes.
 
 # ERD
 
