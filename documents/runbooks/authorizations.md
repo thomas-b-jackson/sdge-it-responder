@@ -16,7 +16,7 @@ Access to each web and api resources is controlled via user role.
 
 Supported roles are per the `Role` enum in [api/schemas/user-registration.graphql](../../api/schemas/user-registration.graphql).
 
-Users are provisioned either manaully, or via the registration process.
+Users are provisioned with roles either manually, or via the registration process.
 
 # API Authorization Controls
 
