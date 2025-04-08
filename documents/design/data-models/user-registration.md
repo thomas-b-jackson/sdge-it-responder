@@ -15,31 +15,30 @@ title: Responder User Registration
 erDiagram
   Section  ||--|| Postition : includes
   User  ||--|| Postition : includes
-  User  ||--|| RegistrationOutcome : includes
+  User  ||--|| Application : includes
 
   Section {
-    name String
+    name string
     positions Postion[]
   }
 
   Postition {
-    name String
+    name string
     section Section
   }
 
   User {
-    name String
-    email String
-    role UserRole
+    name string
+    email string
+    role Role
     position Position
-    status RegistrationStatus
-    registrations RegistrationOutcome[]
+    since datetime
+    application Application
   }
 
-  RegistrationOutcome {
-    approver String
+  Application {
     position Position
-    date UTCString
-    status RegistrationStatus
+    status ApplicationStatus
+    rejectionReason string
   }
 ```

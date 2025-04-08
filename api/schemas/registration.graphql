@@ -6,11 +6,15 @@ type Query {
 }
 
 type Mutation {
-	register(user: UserRegistration!): UserRegistrationResponse
-		@auth(requires: [Responder])
-	approve(approval: RegistrationApproval!): UserRegistrationResponse
-		@auth(requires: [Coordinator])
-	reject(rejection: RegistrationRejection!): UserRegistrationResponse
+	apply(application: ApplicationInput!): ResponderApplicationResponse
+		@auth(requires: [AuthenticatedUser])
+	approveApplication(
+		approval: ApplicationApproval!
+	): ResponderApplicationResponse @auth(requires: [Coordinator])
+	rejectApplication(
+		rejection: ApplicationRejection!
+	): ResponderApplicationResponse @auth(requires: [Coordinator])
+	resetApplication(name: String!): ResponderApplicationResponse
 		@auth(requires: [Coordinator])
 }
 
@@ -22,7 +26,7 @@ interface Response {
 	message: String!
 }
 
-type UserRegistrationResponse implements Response {
+type ResponderApplicationResponse implements Response {
 	code: String!
 	success: Boolean!
 	message: String!
@@ -43,39 +47,34 @@ type User {
 	name: String!
 	email: String!
 	role: Role!
-	status: RegistrationStatus
 	position: Position
-	registrations: [RegistrationOutcome]
+	application: Application
 }
 
-input UserRegistration {
+input ApplicationInput {
 	name: String!
 	email: String!
 	position: Position!
 }
 
-type RegistrationOutcome {
+type Application {
 	position: Position!
-	approver: String!
-	date: String!
-	status: RegistrationStatus!
+	status: ApplicationStatus!
 	rejectionReason: String
 }
 
-input RegistrationApproval {
-	approver: String!
+input ApplicationApproval {
 	userName: String!
 	position: Position!
 }
 
-input RegistrationRejection {
-	approver: String!
+input ApplicationRejection {
 	userName: String!
 	position: Position!
 	reason: String
 }
 
-enum RegistrationStatus {
+enum ApplicationStatus {
 	Unknown
 	Approved
 	ApprovalPending
@@ -83,6 +82,7 @@ enum RegistrationStatus {
 }
 
 enum Role {
+	AuthenticatedUser
 	PositionLead
 	Coordinator
 	Responder
